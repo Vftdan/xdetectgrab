@@ -306,17 +306,18 @@ int main(int argc, char ** argv)
 	signal(SIGUSR1, sig_handler);
 	signal(SIGUSR2, sig_handler);
 
-	running = 1;
+	if (max_iters != 0)
+		running = 1;
 	unsigned long i = 0;
 	while (running)
 	{
-		if (max_iters != -1 && i++ >= max_iters)
-			break;
 		if (grabk)
 			check_keyboard(screen);
 		if (grabp)
 			check_pointer(screen);
 		xcb_flush(conn);
+		if (max_iters != -1 && ++i >= max_iters)
+			break;
 		if (running)
 			sleep_ms(delay_ms);
 	}
